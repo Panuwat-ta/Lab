@@ -2,8 +2,9 @@ const express = require('express');
 const cors = require('cors');
 const path = require('path');
 
-// TODO: import foodRoutes จาก './routes/foods'
-// TODO: import logger middleware จาก './middleware/logger'
+// Import routes และ middleware
+const foodRoutes = require('./routes/foods');
+const logger = require('./middleware/logger');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -12,10 +13,9 @@ const PORT = process.env.PORT || 3000;
 app.use(cors());
 app.use(express.json());
 app.use(express.static('public'));
+app.use(logger); // ใช้ logger middleware
 
-// TODO: ใช้ logger middleware
-
-// Routes
+// Root route
 app.get('/', (req, res) => {
     res.json({
         message: '🍜 Welcome to Food API!',
@@ -26,18 +26,51 @@ app.get('/', (req, res) => {
             category: '/api/foods?category=แกง',
             spicy: '/api/foods?maxSpicy=3',
             vegetarian: '/api/foods?vegetarian=true',
+            random: '/api/foods/random',
             documentation: '/api/docs'
         }
     });
 });
 
-// TODO: ใช้ foodRoutes สำหรับ '/api/foods'
+// ใช้ foodRoutes สำหรับ '/api/foods'
+app.use('/api/foods', foodRoutes);
 
-// TODO: สร้าง route GET /api/docs
-// ส่งข้อมูล API documentation
+// API Documentation
+app.get('/api/docs', (req, res) => {
+    res.json({
+        title: "Food API Documentation",
+        version: "1.0.0",
+        description: "API สำหรับจัดการข้อมูลเมนูอาหาร",
+        endpoints: [
+            { method: "GET", path: "/api/foods", description: "เรียกดูรายการอาหารทั้งหมด พร้อม filtering query params" },
+            { method: "GET", path: "/api/foods/:id", description: "เรียกดูรายละเอียดอาหารตาม ID" },
+            { method: "GET", path: "/api/foods/category/:category", description: "เรียกดูอาหารตามหมวดหมู่" },
+            { method: "GET", path: "/api/foods/random", description: "ดึงอาหารแบบสุ่ม 1 จาน" },
+            { method: "GET", path: "/api/docs", description: "API Documentation" },
+            { method: "GET", path: "/api/stats", description: "สถิติอาหาร เช่น จำนวนอาหารทั้งหมด, จำนวนแต่ละหมวด" }
+        ]
+    });
+});
 
-// TODO: สร้าง route GET /api/stats  
-// ส่งสถิติต่างๆ เช่น จำนวนเมนูทั้งหมด, จำนวนแต่ละหมวด, etc.
+// API Stats
+app.get('/api/stats', (req, res) => {
+    const foods = require('./data/foods.json'); // JSON ของคุณ
+    const totalFoods = foods.length;
+    const categories = {};
+
+    foods.forEach(f => {
+        if (categories[f.category]) {
+            categories[f.category]++;
+        } else {
+            categories[f.category] = 1;
+        }
+    });
+
+    res.json({
+        totalFoods,
+        categories
+    });
+});
 
 // 404 handler
 app.use('*', (req, res) => {
@@ -48,6 +81,7 @@ app.use('*', (req, res) => {
     });
 });
 
+// Start server
 app.listen(PORT, () => {
     console.log(`🚀 Food API Server running on http://localhost:${PORT}`);
     console.log(`📖 API Documentation: http://localhost:${PORT}/api/docs`);
