@@ -49,12 +49,15 @@ npm run dev
 
 ## Screenshots
 ### หน้าแรก
+<img width="1917" height="1014" alt="image" src="https://github.com/user-attachments/assets/d325c8b5-4737-4d86-8c16-fe4a38044b54" />
 
 
 ### รายละเอียดร้าน
+<img width="1919" height="1020" alt="image" src="https://github.com/user-attachments/assets/3cde0b82-5bcf-481d-b8c1-1bd8cb6a25c6" />
 
 
 ### ฟอร์มรีวิว
+<img width="1919" height="1019" alt="image" src="https://github.com/user-attachments/assets/f5d3206b-ee5b-4891-a80a-ab40a33abd4b" />
 
 
 ## ผู้พัฒนา
