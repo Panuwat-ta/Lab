@@ -14,35 +14,26 @@ function ReviewForm({ restaurantId, onReviewAdded }) {
   const validateForm = () => {
     const newErrors = {};
     
-    // ========================================
-    // TODO 1: Validate userName (2-50 ตัวอักษร)
-    // ========================================
-    // if (!formData.userName.trim()) {
-    //   newErrors.userName = 'กรุณากรอกชื่อ';
-    // } else if (formData.userName.trim().length < 2) {
-    //   newErrors.userName = 'ชื่อต้องมีอย่างน้อย 2 ตัวอักษร';
-    // } else if (formData.userName.trim().length > 50) {
-    //   newErrors.userName = 'ชื่อต้องไม่เกิน 50 ตัวอักษร';
-    // }
+    if (!formData.userName.trim()) {
+      newErrors.userName = 'กรุณากรอกชื่อ';
+    } else if (formData.userName.trim().length < 2) {
+      newErrors.userName = 'ชื่อต้องมีอย่างน้อย 2 ตัวอักษร';
+    } else if (formData.userName.trim().length > 50) {
+      newErrors.userName = 'ชื่อต้องไม่เกิน 50 ตัวอักษร';
+    }
     
-    // ========================================
-    // TODO 2: Validate rating (1-5)
-    // ========================================
-    // const ratingNum = parseInt(formData.rating);
-    // if (isNaN(ratingNum) || ratingNum < 1 || ratingNum > 5) {
-    //   newErrors.rating = 'คะแนนต้องอยู่ระหว่าง 1-5';
-    // }
+    const ratingNum = parseInt(formData.rating);
+    if (isNaN(ratingNum) || ratingNum < 1 || ratingNum > 5) {
+      newErrors.rating = 'คะแนนต้องอยู่ระหว่าง 1-5';
+    }
     
-    // ========================================
-    // TODO 3: Validate comment (10-500 ตัวอักษร)
-    // ========================================
-    // if (!formData.comment.trim()) {
-    //   newErrors.comment = 'กรุณากรอกความคิดเห็น';
-    // } else if (formData.comment.trim().length < 10) {
-    //   newErrors.comment = 'ความคิดเห็นต้องมีอย่างน้อย 10 ตัวอักษร';
-    // } else if (formData.comment.trim().length > 500) {
-    //   newErrors.comment = 'ความคิดเห็นต้องไม่เกิน 500 ตัวอักษร';
-    // }
+    if (!formData.comment.trim()) {
+      newErrors.comment = 'กรุณากรอกความคิดเห็น';
+    } else if (formData.comment.trim().length < 10) {
+      newErrors.comment = 'ความคิดเห็นต้องมีอย่างน้อย 10 ตัวอักษร';
+    } else if (formData.comment.trim().length > 500) {
+      newErrors.comment = 'ความคิดเห็นต้องไม่เกิน 500 ตัวอักษร';
+    }
     
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
@@ -58,31 +49,27 @@ function ReviewForm({ restaurantId, onReviewAdded }) {
     try {
       setSubmitting(true);
       
-      // TODO 4: เรียก addReview API
-      // const result = await addReview({
-      //   restaurantId,
-      //   ...formData,
-      //   rating: parseInt(formData.rating)
-      // });
+      await addReview({
+        restaurantId,
+        ...formData,
+        rating: parseInt(formData.rating)
+      });
       
-      // TODO 5: ถ้าสำเร็จ
-      // if (result.success) {
-      //   alert('เพิ่มรีวิวสำเร็จ! ขอบคุณสำหรับความคิดเห็น');
-      //   
-      //   // reset form
-      //   setFormData({
-      //     userName: '',
-      //     rating: 5,
-      //     comment: '',
-      //     visitDate: new Date().toISOString().split('T')[0]
-      //   });
-      //   setErrors({});
-      //   
-      //   // เรียก callback เพื่ออัพเดทรีวิว
-      //   if (onReviewAdded) {
-      //     onReviewAdded();
-      //   }
-      // }
+      alert('เพิ่มรีวิวสำเร็จ! ขอบคุณสำหรับความคิดเห็น');
+      
+      // reset form
+      setFormData({
+        userName: '',
+        rating: 5,
+        comment: '',
+        visitDate: new Date().toISOString().split('T')[0]
+      });
+      setErrors({});
+      
+      // เรียก callback เพื่ออัพเดทรีวิว
+      if (onReviewAdded) {
+        onReviewAdded();
+      }
       
     } catch (error) {
       console.error('Error adding review:', error);
