@@ -29,27 +29,30 @@ app.get('/', (req, res) => {
 app.use('/api/restaurants', restaurantRoutes);
 app.use('/api/reviews', reviewRoutes);
 
-// ========================================
-// TODO: GET /api/stats - ดึงสถิติทั้งหมด
-// ========================================
-// งานที่ต้องทำ:
-// 1. อ่านข้อมูล restaurants.json และ reviews.json
-// 2. คำนวณ:
-//    - totalRestaurants: จำนวนร้านทั้งหมด
-//    - totalReviews: จำนวนรีวิวทั้งหมด
-//    - averageRating: คะแนนเฉลี่ยของร้านทั้งหมด (ปัดเศษ 1 ตำแหน่ง)
-//    - topRatedRestaurants: ร้าน 5 อันดับแรกที่มี rating สูงสุด
-// 3. ส่งข้อมูลกลับในรูปแบบ: { success: true, data: {...} }
-//
-// คำใบ้:
-// - ใช้ Array.reduce() เพื่อรวมคะแนน
-// - ใช้ Array.sort() และ Array.slice(0, 5) เพื่อหา top 5
-// - ระวัง: ร้านที่ยังไม่มีรีวิว (averageRating = 0) อาจมีปัญหาในการเรียง
-
 app.get('/api/stats', async (req, res) => {
   try {
-    // TODO: เขียนโค้ดที่นี่
-    
+    const restaurants = await readJsonFile('restaurants.json');
+    const reviews = await readJsonFile('reviews.json');
+
+    const totalRestaurants = restaurants.length;
+    const totalReviews = reviews.length;
+
+    const totalRating = restaurants.reduce((sum, restaurant) => sum + restaurant.averageRating, 0);
+    const averageRating = totalRestaurants > 0 ? parseFloat((totalRating / totalRestaurants).toFixed(1)) : 0;
+
+    const topRatedRestaurants = [...restaurants]
+      .sort((a, b) => b.averageRating - a.averageRating)
+      .slice(0, 5);
+
+    res.json({
+      success: true,
+      data: {
+        totalRestaurants,
+        totalReviews,
+        averageRating,
+        topRatedRestaurants
+      }
+    });
   } catch (error) {
     console.error('Error fetching stats:', error);
     res.status(500).json({
