@@ -15,7 +15,7 @@ export const getRestaurants = async (filters = {}) => {
     
     const url = `${API_URL}/restaurants?${queryParams}`;
 
-    const response = await fetch(url);
+    const response = await fetch(url, { cache: 'no-store' });
     
     if (!response.ok) {
       throw new Error('Failed to fetch restaurants');
@@ -36,7 +36,7 @@ export const getRestaurants = async (filters = {}) => {
  */
 export const getRestaurantById = async (id) => {
   try {
-    const response = await fetch(`${API_URL}/restaurants/${id}`);
+    const response = await fetch(`${API_URL}/restaurants/${id}`, { cache: 'no-store' });
     if (!response.ok) {
       throw new Error('Failed to fetch restaurant');
     }

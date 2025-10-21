@@ -41,12 +41,24 @@ function RestaurantList({ onSelectRestaurant }) {
 
   // 4. handleSearch
   const handleSearch = (searchTerm) => {
-    setFilters(prev => ({ ...prev, search: searchTerm }));
+    setFilters(prev => {
+      if (prev.search === searchTerm) {
+        return prev;
+      }
+      return { ...prev, search: searchTerm };
+    });
   };
 
   // 5. handleFilterChange
   const handleFilterChange = (newFilters) => {
-    setFilters(prev => ({ ...prev, ...newFilters }));
+    setFilters(prev => {
+      const updatedFilters = { ...prev, ...newFilters };
+      const hasChanged = Object.keys(updatedFilters).some(key => updatedFilters[key] !== prev[key]);
+      if (!hasChanged) {
+        return prev;
+      }
+      return updatedFilters;
+    });
   };
 
   return (

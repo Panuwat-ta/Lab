@@ -18,7 +18,7 @@ function RestaurantDetail({ restaurantId, onBack }) {
       setError(null);
       
       const result = await getRestaurantById(restaurantId);
-      setRestaurant(result);
+      setRestaurant(result.data);
       
     } catch (err) {
       setError('ไม่สามารถโหลดข้อมูลร้านได้');
