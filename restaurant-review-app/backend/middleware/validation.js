@@ -24,56 +24,47 @@ const validateReview = (req, res, next) => {
     errors.push('รหัสร้านต้องมากกว่า 0');
   }
   
-  // ========================================
-  // TODO 1: ตรวจสอบ userName
-  // ========================================
-  // เงื่อนไข:
-  // - ต้องมีค่า (ไม่ว่างเปล่า)
-  // - ความยาว 2-50 ตัวอักษร (หลัง trim())
-  // - ไม่มีอักขระพิเศษที่อันตราย (ใช้ hasDangerousCharacters)
-  //
-  // ตัวอย่าง error messages:
-  // - 'กรุณากรอกชื่อ'
-  // - 'ชื่อต้องมีอย่างน้อย 2 ตัวอักษร'
-  // - 'ชื่อต้องไม่เกิน 50 ตัวอักษร'
-  // - 'ชื่อมีอักขระที่ไม่อนุญาต'
-  //
-  // คำใบ้:
-  // if (!userName || !userName.trim()) {
-  //   errors.push('กรุณากรอกชื่อ');
-  // } else if (userName.trim().length < 2) {
-  //   errors.push('ชื่อต้องมีอย่างน้อย 2 ตัวอักษร');
-  // } ...
+  // Validate userName
+  if (!userName || !userName.trim()) {
+    errors.push('กรุณากรอกชื่อ');
+  } else {
+    const trimmedUserName = userName.trim();
+    if (trimmedUserName.length < 2) {
+      errors.push('ชื่อต้องมีอย่างน้อย 2 ตัวอักษร');
+    }
+    if (trimmedUserName.length > 50) {
+      errors.push('ชื่อต้องไม่เกิน 50 ตัวอักษร');
+    }
+    if (hasDangerousCharacters(trimmedUserName)) {
+      errors.push('ชื่อมีอักขระที่ไม่อนุญาต');
+    }
+  }
   
-  // ========================================
-  // TODO 2: ตรวจสอบ rating
-  // ========================================
-  // เงื่อนไข:
-  // - ต้องมีค่า
-  // - ต้องเป็นตัวเลข
-  // - ต้องอยู่ระหว่าง 1-5
-  //
-  // คำใบ้:
-  // const ratingNum = parseInt(rating);
-  // if (!rating) {
-  //   errors.push('กรุณาเลือกคะแนน');
-  // } else if (isNaN(ratingNum) || ratingNum < 1 || ratingNum > 5) {
-  //   errors.push('คะแนนต้องอยู่ระหว่าง 1-5');
-  // }
+  // Validate rating
+  if (rating === undefined || rating === null || String(rating).trim() === '') {
+    errors.push('กรุณาเลือกคะแนน');
+  } else {
+    const ratingNum = parseInt(rating);
+    if (isNaN(ratingNum) || ratingNum < 1 || ratingNum > 5) {
+      errors.push('คะแนนต้องอยู่ระหว่าง 1-5');
+    }
+  }
   
-  // ========================================
-  // TODO 3: ตรวจสอบ comment
-  // ========================================
-  // เงื่อนไข:
-  // - ต้องมีค่า
-  // - ความยาว 10-500 ตัวอักษร (หลัง trim())
-  // - ไม่มีอักขระพิเศษที่อันตราย
-  //
-  // ตัวอย่าง error messages:
-  // - 'กรุณากรอกความคิดเห็น'
-  // - 'ความคิดเห็นต้องมีอย่างน้อย 10 ตัวอักษร'
-  // - 'ความคิดเห็นต้องไม่เกิน 500 ตัวอักษร'
-  // - 'ความคิดเห็นมีอักขระที่ไม่อนุญาต'
+  // Validate comment
+  if (!comment || !comment.trim()) {
+    errors.push('กรุณากรอกความคิดเห็น');
+  } else {
+    const trimmedComment = comment.trim();
+    if (trimmedComment.length < 10) {
+      errors.push('ความคิดเห็นต้องมีอย่างน้อย 10 ตัวอักษร');
+    }
+    if (trimmedComment.length > 500) {
+      errors.push('ความคิดเห็นต้องไม่เกิน 500 ตัวอักษร');
+    }
+    if (hasDangerousCharacters(trimmedComment)) {
+      errors.push('ความคิดเห็นมีอักขระที่ไม่อนุญาต');
+    }
+  }
   
   // ตรวจสอบว่ามี error หรือไม่
   if (errors.length > 0) {
