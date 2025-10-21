@@ -17,13 +17,8 @@ function RestaurantDetail({ restaurantId, onBack }) {
       setLoading(true);
       setError(null);
       
-      // TODO 1: เรียก getRestaurantById
-      // const result = await getRestaurantById(restaurantId);
-      
-      // TODO 2: ตั้งค่า state
-      // if (result.success) {
-      //   setRestaurant(result.data);
-      // }
+      const result = await getRestaurantById(restaurantId);
+      setRestaurant(result);
       
     } catch (err) {
       setError('ไม่สามารถโหลดข้อมูลร้านได้');
